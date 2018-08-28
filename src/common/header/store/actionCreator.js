@@ -1,7 +1,8 @@
-import * as actionTypes from './constants'
+import * as constants from './constants'
+
 export const searchFocus = ()=>({
-	type: actionTypes.SEARCH_FOCUS
+	type: constants.SEARCH_FOCUS
 })
 export const searchBlur = ()=>({
-	type: actionTypes.SEARCH_BLUR
+	type: constants.SEARCH_BLUR
 })
