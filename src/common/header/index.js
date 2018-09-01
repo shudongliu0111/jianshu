@@ -1,32 +1,46 @@
-import React from 'react'
+import React, {Component}from 'react'
 import { connect } from 'react-redux'
 import {actionCreator} from './store'
 import {HeaderWrapper,Logo,Nav,NavItem,NavSearch,Addition,Button,SearchWraper,SearchInfo,SearchTitle,SearchSwitch,SearchInfoItem} from './style.js'
 import { CSSTransition } from 'react-transition-group';
 
-const getListArea = (show)=>{
-	if (show) {
-		return (
-			<SearchInfo>
-					<SearchTitle>
-						热门搜索
-						<SearchSwitch>换一换</SearchSwitch>
-					</SearchTitle>
-					<div>
-						<SearchInfoItem>jiaoyu</SearchInfoItem>
-						<SearchInfoItem>简述</SearchInfoItem>
-						<SearchInfoItem>CSDN</SearchInfoItem>
-						<SearchInfoItem>博客园</SearchInfoItem>
-						<SearchInfoItem>简述</SearchInfoItem>
-						<SearchInfoItem>CSDN</SearchInfoItem>
-						<SearchInfoItem>博客园</SearchInfoItem>
-					</div>	
-			</SearchInfo>
-		)
+
+class Header extends Component {
+	getListArea(){
+		
+		const newList = this.props.list.toJS()
+		const pageList = [];
+		if (newList.length) {
+			// 同时满足了两个条件 这样循环就ok了
+			for (var i = this.props.page*10; i < (this.props.page+1)*10 && i < newList.length; i++){
+				pageList.push(
+					<SearchInfoItem key={newList[i]}>{newList[i]}</SearchInfoItem>
+				)
+			}
+		}
+		
+
+
+		if (this.props.focused || this.props.mouseIn) {
+			return (
+				<SearchInfo 
+					onMouseEnter={this.props.handleMouseEnter}
+					// onMouseEnter={()=>{console.log(123)}}
+					onMouseLeave={this.props.handleMouseLeave}
+				>
+						<SearchTitle>
+							热门搜索
+							<SearchSwitch onClick={()=>this.props.handleChangePage(this.props.page,this.props.totalPage)}>换一换</SearchSwitch>
+						</SearchTitle>
+						<div>
+							{pageList}
+						</div>	
+				</SearchInfo>
+			)
+		}
 	}
-}
-const Header =(props)=>{
-	return(
+	render(){
+		return(
 			<HeaderWrapper>
 				<Logo/>
 				<Nav>
@@ -38,18 +52,18 @@ const Header =(props)=>{
 					</NavItem>
 					<SearchWraper>
 						<CSSTransition
-							in={props.focused}
+							in={this.props.focused}
 							timeout={200}
 							classNames='slide'
 						>
 							<NavSearch 
-								className={props.focused ? 'focused':''}
-								onFocus={props.handleInputFocus}
-								onBlur={props.handleInputBlur}
+								className={this.props.focused ? 'focused':''}
+								onFocus={this.props.handleInputFocus}
+								onBlur={this.props.handleInputBlur}
 							/>
 						</CSSTransition>
-						<i className={props.focused ? 'focused iconfont':'iconfont'}>&#xe6cf;</i>
-						{getListArea(props.focused)}
+						<i className={this.props.focused ? 'focused iconfont':'iconfont'}>&#xe6cf;</i>
+						{this.getListArea()}
 					</SearchWraper>
 				</Nav>
 				<Addition>
@@ -61,21 +75,46 @@ const Header =(props)=>{
 				</Addition>
 			</HeaderWrapper>
 		)
+	}
 }
 
 const mapStateToProps = (state)=>{
 	return{
-		focused:state.get('header').get('focused')
+		// 这两种都一样 是immutable提供的方法
+		focused:state.get('header').get('focused'),
+		mouseIn:state.getIn(['header','mouseIn']),
+		list:state.getIn(['header','list']),
+		page:state.getIn(['header','page']),
+		totalPage:state.getIn(['header','totalPage'])
+
 	}
 }
 const mapDispatchToProps = (dispatch)=>{
 	return{
 		handleInputFocus(){
 			dispatch(actionCreator.searchFocus())
+			dispatch(actionCreator.getList())
 		},
 		handleInputBlur(){
 			// 使用actoncreater
 			dispatch(actionCreator.searchBlur())
+		},
+		handleMouseEnter(){
+			// console.log(1)
+			dispatch(actionCreator.mouseEnter())
+		},
+		handleMouseLeave(){
+			// console.log(123)
+			dispatch(actionCreator.mouseLeave())
+		},
+		handleChangePage(page,totalPage){
+			console.log(page,totalPage)
+			if (page < totalPage-1) {
+				dispatch(actionCreator.changePage(page+1))
+			}else{
+				dispatch(actionCreator.changePage(0))
+			}
+			
 		}
 	}
 }

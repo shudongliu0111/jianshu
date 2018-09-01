@@ -2,21 +2,32 @@ import * as constants from './constants'
 import { fromJS} from 'immutable'
 
 const defaultState = fromJS({
-	focused:false
+	focused:false,
+	mouseIn:false,
+	list:[],
+	page:0,
+	totalPage:1
 })
 
 export default (state=defaultState,action)=>{
-	if (action.type===constants.SEARCH_FOCUS) {
-		return state.set('focused',true)
-		// const newState = {...state}
-		// newState.focused = true
-		// return newState
+	switch(action.type){
+		case constants.SEARCH_FOCUS :
+			return state.set('focused',true);
+			// 有return 就不用break了
+		case constants.SEARCH_BLUR:
+			return state.set('focused',false);
+		case constants.CHANGE_LIST :
+			// return state.set("list",action.data).set("totalPage",action.totalPage);
+			return state.merge({
+				list:action.data,
+				totalPage: action.totalPage
+			})
+		case constants.MOUSE_ENTER:
+			return state.set("mouseIn",true);
+		case constants.MOUSE_LEAVE:
+			return state.set("mouseIn",false);
+		case constants.CHANGE_PAGE:
+			return state.set("page",action.page)
+		default :return state;
 	}
-	if (action.type===constants.SEARCH_BLUR) {
-		return state.set('focused',false)
-		// const newState = {...state}
-		// newState.focused = false
-		// return newState
-	}
-	return state;
 }
