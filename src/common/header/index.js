@@ -30,7 +30,10 @@ class Header extends Component {
 				>
 						<SearchTitle>
 							热门搜索
-							<SearchSwitch onClick={()=>this.props.handleChangePage(this.props.page,this.props.totalPage)}>换一换</SearchSwitch>
+							<SearchSwitch onClick={()=>this.props.handleChangePage(this.props.page,this.props.totalPage)}>
+								<i className='iconfont'>&#xe851;</i>
+								换一换
+							</SearchSwitch>
 						</SearchTitle>
 						<div>
 							{pageList}
@@ -62,7 +65,7 @@ class Header extends Component {
 								onBlur={this.props.handleInputBlur}
 							/>
 						</CSSTransition>
-						<i className={this.props.focused ? 'focused iconfont':'iconfont'}>&#xe6cf;</i>
+						<i className={this.props.focused ? 'focused iconfont zoom':'iconfont zoom'}>&#xe6cf;</i>
 						{this.getListArea()}
 					</SearchWraper>
 				</Nav>

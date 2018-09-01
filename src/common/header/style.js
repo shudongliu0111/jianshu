@@ -45,7 +45,7 @@ export const SearchWraper = styled.div`
 	float:left;
 	position:relative;
 	
-	.iconfont{
+	.zoom{
 		position:absolute;
 		right:5px;
 		bottom:4px;
@@ -116,6 +116,11 @@ export const SearchTitle = styled.div`
 export const SearchSwitch = styled.span`
 	float:right;
 	font-size:13px;
+	.spin{
+		display:block
+		font-size:12px;
+		margin-right:50px;
+	}
 
 `
 export const SearchInfoItem = styled.a`
