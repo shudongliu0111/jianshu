@@ -30,8 +30,8 @@ class Header extends Component {
 				>
 						<SearchTitle>
 							热门搜索
-							<SearchSwitch onClick={()=>this.props.handleChangePage(this.props.page,this.props.totalPage)}>
-								<i className='iconfont'>&#xe851;</i>
+							<SearchSwitch onClick={()=>this.props.handleChangePage(this.props.page,this.props.totalPage,this.spinIcon)}>
+								<i ref={(icon)=>{this.spinIcon = icon}} className='iconfont spin'>&#xe851;</i>
 								换一换
 							</SearchSwitch>
 						</SearchTitle>
@@ -61,7 +61,7 @@ class Header extends Component {
 						>
 							<NavSearch 
 								className={this.props.focused ? 'focused':''}
-								onFocus={this.props.handleInputFocus}
+								onFocus={()=>{this.props.handleInputFocus(this.props.list)}}
 								onBlur={this.props.handleInputBlur}
 							/>
 						</CSSTransition>
@@ -94,9 +94,14 @@ const mapStateToProps = (state)=>{
 }
 const mapDispatchToProps = (dispatch)=>{
 	return{
-		handleInputFocus(){
-			dispatch(actionCreator.searchFocus())
-			dispatch(actionCreator.getList())
+		handleInputFocus(list){
+			 (list.size ===0) && dispatch(actionCreator.getList());
+			// if (list.size ===0) {
+			// 	dispatch(actionCreator.getList());
+			// }
+			
+			
+			dispatch(actionCreator.searchFocus());
 		},
 		handleInputBlur(){
 			// 使用actoncreater
@@ -110,8 +115,17 @@ const mapDispatchToProps = (dispatch)=>{
 			// console.log(123)
 			dispatch(actionCreator.mouseLeave())
 		},
-		handleChangePage(page,totalPage){
-			console.log(page,totalPage)
+		handleChangePage(page,totalPage,spin){
+			// 将非数字转换为空 就只有数字了
+			let originAngle	= spin.style.transform.replace(/[^0-9]/ig, '')
+			if (originAngle) {
+				// 将字符串转换为number
+				originAngle = parseInt(originAngle, 10)
+			}else{
+				originAngle = 0;
+			}
+			spin.style.transform= 'rotate('+(originAngle + 360)+'deg)'
+
 			if (page < totalPage-1) {
 				dispatch(actionCreator.changePage(page+1))
 			}else{
