@@ -99,8 +99,6 @@ const mapDispatchToProps = (dispatch)=>{
 			// if (list.size ===0) {
 			// 	dispatch(actionCreator.getList());
 			// }
-			
-			
 			dispatch(actionCreator.searchFocus());
 		},
 		handleInputBlur(){
