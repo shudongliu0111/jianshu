@@ -12,7 +12,11 @@ export const HomeLeft = styled.div`
 	margin-left:15px;
 	padding-top:30px;
 	float:left;
-
+	
+	.banner-img{
+		width:625px;
+		height:270px;
+	}
 	background:green;
 
 ` 
