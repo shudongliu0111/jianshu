@@ -4,8 +4,8 @@ import List from  './component/List'
 import Recommend from  './component/Recommend'
 import Topic from  './component/Topic'
 import Write from  './component/Write'
-
-
+import axios from "axios"
+import {connect} from 'react-redux'
 
 class Home extends Component {
 	render(){
@@ -25,6 +25,24 @@ class Home extends Component {
 			</HomeWraper>
 		)
 	}
+	componentDidMount(){
+		this.props.changeHomeData()
+	}
 }
+const mapDispatchToProps=(dispatch)=>({
+	changeHomeData(){
+		axios.get("/api/home.json").then((res)=>{
+			const result =res.data.data;
+			const action = {
+				type:"change_home_dara",
+				topicList: result.topicList,
+				articleList:result.articleList,
+				recommendList: result.recommendList
+			}
+			dispatch(action)
+		})
+		
+	}
+})
 
-export default Home;
+export default connect(null,mapDispatchToProps)(Home);
